@@ -39,12 +39,14 @@ y_train = np.array(augmented_measurements)
 
 
 from keras.models import Sequential
-from keras.layers import Flatten, Dense, Lambda
+from keras.layers import Flatten, Dense, Lambda, Cropping2D
 from keras.layers import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 
 model = Sequential()
 model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
+# Cropping Layer
+model.add(Cropping2D(cropping=((70,25),(0,0))))
 model.add(Convolution2D(6,5,5,activation='relu'))
 model.add(MaxPooling2D())
 model.add(Convolution2D(6,5,5,activation='relu'))
@@ -57,5 +59,5 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam')
 model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
 
-model.save('models/augmented_model.h5')
+model.save('models/cropped_model.h5')
 exit()
